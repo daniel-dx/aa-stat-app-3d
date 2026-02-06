@@ -1,41 +1,39 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Users, UserCheck, UserX, TrendingUp, Database } from 'lucide-react';
-// @ts-ignore;
+import { Users, UserCheck, UserX, TrendingUp, Database } from 'lucide-react'; // @ts-ignore;
 import { useToast } from '@/components/ui';
-
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 const COLORS = ['#1e40af', '#059669', '#dc2626'];
 export default function Statistics(props) {
   const {
-    toast
-  } = useToast();
+    toast } =
+  useToast();
   const [statistics, setStatistics] = useState({
     totalUsers: 0,
     realUsers: 0,
     virtualUsers: 0,
-    loading: true
-  });
+    loading: true });
+
   const [userList, setUserList] = useState([]);
 
   // 获取用户统计数据
-  const fetchUserStatistics = async () => {
-    try {
+  // 获取用户统计数据
+  const fetchUserStatistics = async () => {try {
       const tcb = await props.$w.cloud.getCloudInstance();
 
       // 查询所有用户 - 使用 count 获取总数
-      const countResult = await tcb.database().collection('aa_user').count();
-      const totalCount = countResult.total || 0;
+      // 查询所有用户 - 使用 count 获取总数
+      const countResult = await tcb.database().collection('aa_user').count();const totalCount = countResult.total || 0;
 
       // 获取用户列表用于详细展示（限制数量避免性能问题）
-      const userResult = await tcb.database().collection('aa_user').limit(100).get();
-      const users = userResult.data || [];
+      // 获取用户列表用于详细展示（限制数量避免性能问题）
+      const userResult = await tcb.database().collection('aa_user').limit(100).get();const users = userResult.data || [];
 
       // 统计用户数据（基于获取的样本）
-      let realUsers = 0;
-      let virtualUsers = 0;
-      users.forEach(user => {
+      // 统计用户数据（基于获取的样本）
+      let realUsers = 0;let virtualUsers = 0;
+      users.forEach((user) => {
         // 如果存在 isVirtual 字段，则根据该字段统计
         // 如果不存在，则默认为真实用户
         if (user.isVirtual === true) {
@@ -46,38 +44,38 @@ export default function Statistics(props) {
       });
 
       // 根据样本比例估算总数（如果样本数量小于总数）
-      if (users.length < totalCount) {
-        const sampleRatio = users.length / totalCount;
+      // 根据样本比例估算总数（如果样本数量小于总数）
+      if (users.length < totalCount) {const sampleRatio = users.length / totalCount;
         realUsers = Math.round(realUsers / sampleRatio);
         virtualUsers = Math.round(virtualUsers / sampleRatio);
       }
       // 调试信息：显示实际统计结果
-      console.log('用户统计结果:', {
-        totalCount,
+      // 调试信息：显示实际统计结果
+      console.log('用户统计结果:', { totalCount,
         sampleSize: users.length,
         realUsers,
         virtualUsers,
-        sampleRealUsers: users.filter(u => u.isVirtual !== true).length,
-        sampleVirtualUsers: users.filter(u => u.isVirtual === true).length
-      });
+        sampleRealUsers: users.filter((u) => u.isVirtual !== true).length,
+        sampleVirtualUsers: users.filter((u) => u.isVirtual === true).length });
+
       setStatistics({
         totalUsers: totalCount,
         realUsers,
         virtualUsers,
-        loading: false
-      });
+        loading: false });
+
       setUserList(users.slice(0, 10)); // 显示前10个用户作为示例
     } catch (error) {
       console.error('获取用户统计数据失败:', error);
       toast({
         title: '获取数据失败',
         description: error.message || '无法获取用户统计数据',
-        variant: 'destructive'
-      });
-      setStatistics(prev => ({
+        variant: 'destructive' });
+
+      setStatistics((prev) => ({
         ...prev,
-        loading: false
-      }));
+        loading: false }));
+
     }
   };
   useEffect(() => {
@@ -85,25 +83,25 @@ export default function Statistics(props) {
   }, []);
 
   // 图表数据
-  const pieData = [{
-    name: '真实用户',
+  // 图表数据
+  const pieData = [{ name: '真实用户',
     value: statistics.realUsers,
-    color: '#1e40af'
-  }, {
+    color: '#1e40af' },
+  {
     name: '虚拟用户',
     value: statistics.virtualUsers,
-    color: '#dc2626'
-  }];
+    color: '#dc2626' }];
+
   const barData = [{
     name: '总用户',
-    value: statistics.totalUsers
-  }, {
+    value: statistics.totalUsers },
+  {
     name: '真实用户',
-    value: statistics.realUsers
-  }, {
+    value: statistics.realUsers },
+  {
     name: '虚拟用户',
-    value: statistics.virtualUsers
-  }];
+    value: statistics.virtualUsers }];
+
   if (statistics.loading) {
     return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
         <div className="max-w-7xl mx-auto">
@@ -119,8 +117,8 @@ export default function Statistics(props) {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2" style={{
-          fontFamily: 'Playfair Display'
-        }}>
+          fontFamily: 'Playfair Display' }}>
+
             用户统计分析
           </h1>
           <p className="text-gray-600">实时监控用户数据，洞察用户行为趋势</p>
@@ -162,7 +160,7 @@ export default function Statistics(props) {
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">虚拟用户</p>
+                <p className="text-sm font-medium text-gray-600">虚拟用户1</p>
                 <p className="text-3xl font-bold text-orange-600">{statistics.virtualUsers}</p>
               </div>
               <div className="p-3 bg-orange-100 rounded-full">
@@ -195,8 +193,8 @@ export default function Statistics(props) {
           {/* 饼图 */}
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <h3 className="text-xl font-bold text-gray-900 mb-4" style={{
-            fontFamily: 'Playfair Display'
-          }}>
+            fontFamily: 'Playfair Display' }}>
+
               用户类型分布
             </h3>
             <div className="h-80">
@@ -204,8 +202,8 @@ export default function Statistics(props) {
                 <PieChart>
                   <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={({
                   name,
-                  percent
-                }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                  percent }) =>
+                `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="value">
                     {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                   </Pie>
                   <Tooltip />
@@ -217,8 +215,8 @@ export default function Statistics(props) {
           {/* 柱状图 */}
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <h3 className="text-xl font-bold text-gray-900 mb-4" style={{
-            fontFamily: 'Playfair Display'
-          }}>
+            fontFamily: 'Playfair Display' }}>
+
               用户数量对比
             </h3>
             <div className="h-80">
@@ -239,8 +237,8 @@ export default function Statistics(props) {
         <div className="bg-white rounded-xl shadow-lg border border-gray-100">
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-xl font-bold text-gray-900" style={{
-            fontFamily: 'Playfair Display'
-          }}>
+            fontFamily: 'Playfair Display' }}>
+
               最近用户 (显示前10个)
             </h3>
             <p className="text-gray-600 mt-1">展示最新的用户数据</p>
@@ -267,7 +265,7 @@ export default function Statistics(props) {
                 {userList.map((user, index) => <tr key={user._id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <img className="h-10 w-10 rounded-full" src={user.avatarUrl || 'https://via.placeholder.com/40'} alt={user.nickName || '用户'} onError={e => {
+                        <img className="h-10 w-10 rounded-full" src={user.avatarUrl || 'https://via.placeholder.com/40'} alt={user.nickName || '用户'} onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/40';
                     }} />
                         <div className="ml-4">
@@ -307,8 +305,8 @@ export default function Statistics(props) {
           <button onClick={() => {
           toast({
             title: '功能开发中',
-            description: '导出功能正在开发中，敬请期待'
-          });
+            description: '导出功能正在开发中，敬请期待' });
+
         }} className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
             导出数据
           </button>
